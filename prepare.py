@@ -20,7 +20,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder, MinMaxScaler
 
 def clean_zillow():
     #get the zillow data
-    df= get_zillow_data()
+    df= acquire.get_zillow_data()
     #handle the nan's
     df['bedroomcnt'].fillna(df['bedroomcnt'].mode()[0], inplace=True)
     df['bathroomcnt'].fillna(df['bathroomcnt'].mode()[0], inplace=True)
