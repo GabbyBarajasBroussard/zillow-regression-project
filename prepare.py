@@ -38,8 +38,7 @@ def clean_zillow():
     df['county']= rating
     #rename columns to make it easier to call later
     df= df.rename(columns={"bedroomcnt": "bedroom_count","bathroomcnt": "bathroom_count",
-                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value")
-                      })
+                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value"})
     # drop unneeded columns
     df= df.drop(columns=["Unnamed: 0", "parcelid"])
     # return the clean dataframe
