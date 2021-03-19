@@ -28,12 +28,20 @@ def clean_zillow():
     df['fips'].fillna(df['fips'].mode()[0], inplace=True)
     df['taxamount'].fillna(df['taxamount'].mode()[0], inplace=True)
     df['taxvaluedollarcnt'].fillna(df['taxvaluedollarcnt'].mode()[0], inplace=True)
+    # make new column for county names
+    rating = []
+    for row in df['fips']:
+        if row == 6037.0:    rating.append('los_angeles_county')
+        elif row == 6059.0:   rating.append('orange_county')
+        elif row == 6111.0:  rating.append('ventura_county')
+        else:           rating.append('no_county')
+    df['county']= rating
     #rename columns to make it easier to call later
-    df= df.rename(columns={"parcelid": "parcel_id", "bedroomcnt": "bedroom_count","bathroomcnt": "bathroom_count",
-                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value"
+    df= df.rename(columns={"bedroomcnt": "bedroom_count","bathroomcnt": "bathroom_count",
+                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value")
                       })
     # drop unneeded columns
-    df= df.drop(columns=["Unnamed: 0"])
+    df= df.drop(columns=["Unnamed: 0", "parcelid"])
     # return the clean dataframe
     return df
 
