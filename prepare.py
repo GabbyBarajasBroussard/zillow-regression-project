@@ -20,7 +20,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder, MinMaxScaler
 
 def clean_zillow():
     #get the zillow data
-    df= acquire.get_zillow_data()
+    df= get_zillow_data()
     #handle the nan's
     df['bedroomcnt'].fillna(df['bedroomcnt'].mode()[0], inplace=True)
     df['bathroomcnt'].fillna(df['bathroomcnt'].mode()[0], inplace=True)
@@ -28,6 +28,17 @@ def clean_zillow():
     df['fips'].fillna(df['fips'].mode()[0], inplace=True)
     df['taxamount'].fillna(df['taxamount'].mode()[0], inplace=True)
     df['taxvaluedollarcnt'].fillna(df['taxvaluedollarcnt'].mode()[0], inplace=True)
+    #handle outliers
+    index_sqft = df.loc[df['calculatedfinishedsquarefeet']>= 7000].index
+    index_tax_amount = df.loc[df['taxamount']>= 80000].index
+    index_tax_value = df.loc[df['taxvaluedollarcnt']>= 4000000].index
+    index_bath = df.loc[df['bathroomcount']>= 9].index
+    index_bed = df.loc[df['bedroomcount']>= 9].index
+    df.drop(index_bath, inplace=True)
+    df.drop(index_bath, inplace=True)
+    df.drop(index_taxvalue, inplace=True)
+    df.drop(index_tax_amount, inplace=True)
+    df.drop(index_sqft, inplace=True)
     # make new column for county names
     rating = []
     for row in df['fips']:
@@ -38,9 +49,10 @@ def clean_zillow():
     df['county']= rating
     #rename columns to make it easier to call later
     df= df.rename(columns={"bedroomcnt": "bedroom_count","bathroomcnt": "bathroom_count",
-                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value"})
+                      "calculatedfinishedsquarefeet": "square_feet", "taxamount": "tax_amount", "taxvaluedollarcnt": "tax_value"
+                      })
     # drop unneeded columns
-    df= df.drop(columns=["Unnamed: 0", "parcelid"])
+    df= df.drop(columns=["Unnamed: 0", "parcelid", 'latitude','longitude'])
     # return the clean dataframe
     return df
 
