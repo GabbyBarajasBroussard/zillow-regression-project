@@ -21,10 +21,12 @@ def get_zillow_data():
     else:
         # read the SQL query into a dataframe
         df = pd.read_sql('''
-            SELECT properties_2017.parcelid, fips, latitude, longitude, bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet,  taxamount, taxvaluedollarcnt FROM properties_2017
-            JOIN predictions_2017 ON properties_2017.parcelid = predictions_2017.parcelid
-                        WHERE properties_2017.propertylandusetypeid = '261' OR '262' OR '263' OR '264' OR '268' OR '273' OR '274' OR '275' OR '276' OR '279'
-            AND transactiondate BETWEEN '2017-05-01' AND '2017-08-31'
+SELECT parcelid, fips, latitude, longitude, bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxamount, taxvaluedollarcnt FROM properties_2017
+JOIN predictions_2017 USING (parcelid) 
+WHERE transactiondate BETWEEN '2017-05-01' AND '2017-08-31'
+AND (propertylandusetypeid IN (261, 262, 263, 264, 268, 273, 274, 276, 279))
+AND (bathroomcnt > 0)
+AND (bedroomcnt > 0);
             ''' , get_connection('zillow'))
         # Write that dataframe to disk for later. Called "caching" the data for later.
         df.to_csv(filename)
