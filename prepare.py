@@ -73,41 +73,35 @@ def prep_split_zillow_data():
     y_validate = validate[['tax_value']]
     y_test = test[['tax_value']]
     return X_train, X_validate, X_test, y_train, y_validate, y_test
-
+# In [ ]:
+def Robust_Scaler(X_train, X_validate, X_test):
+    """
+    Takes in X_train, X_validate and X_test dfs with numeric values only
+    Returns scaler, X_train_scaled, X_validate_scaled, X_test_scaled dfs 
+    """
+    scaler = sklearn.preprocessing.RobustScaler().fit(X_train)
+    X_train_scaled = pd.DataFrame(scaler.transform(X_train), index = X_train.index, columns = X_train.columns)
+    X_validate_scaled = pd.DataFrame(scaler.transform(X_validate), index = X_validate.index, columns = X_validate.columns)
+    X_test_scaled = pd.DataFrame(scaler.transform(X_test), index = X_test.index, columns = X_test.columns)
+    
+    return scaler, X_train_scaled, X_validate_scaled, X_test_scaled
 
 # In[ ]:
-def select_kbest(x, y, k):
+def model_zillow ():
+    '''This function takes in the clean data, drops the tax amount for modeling purposes and drops the not as good features as chosen by rfe and selectkbest.'''
+    df= clean_zillow()
+    df= df.drop(columns=['tax_amount','county','lot_size','fips'])
     
-    # parameters: f_regression stats test, give me 8 features
-    f_selector = SelectKBest(f_regression, k=k)
+    train_validate, test = train_test_split(df, test_size=.2, random_state=123)
+    train, validate = train_test_split(train_validate, test_size=.3, random_state=123) 
     
-    # find the top 8 X's correlated with y
-    f_selector.fit(x, y)
-    
-    # boolean mask of whether the column was selected or not. 
-    feature_mask = f_selector.get_support()
-    
-    f_feature = X_train_scaled.iloc[:,feature_mask].columns.tolist()
-    
-    return f_feature
+    X_train2 = train.drop(columns=['tax_value'])
+    X_validate2 = validate.drop(columns=['tax_value'])
+    X_test2 = test.drop(columns=['tax_value'])
 
-# In [ ]:
-def rfe(x, y, k):
-    
-    lm = LinearRegression()
-    
-    rfe = RFE(lm, k)
-    
-    # Transforming data using RFE
-    X_rfe = rfe.fit_transform(X_train_scaled,y_train)  
-    
-    mask = rfe.support_
-    
-    rfe_features = X_train_scaled.loc[:,mask].columns.tolist()
-    
-    print(str(len(rfe_features)), 'selected features')
-    
-    return  rfe_features
-
+    y_train2 = train[['tax_value']]
+    y_validate2 = validate[['tax_value']]
+    y_test2 = test[['tax_value']]
+    return X_train2, X_validate2, X_test2, y_train2, y_validate2, y_test2
 
 
