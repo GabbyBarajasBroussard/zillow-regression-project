@@ -53,6 +53,7 @@ feature engineering<br>
 <ol>
 <li> split into x/y train, drop tax amount and scale the data</ul>
 <li> find top 3 features using KSelect Best and RFE</li> 
+</ol><br>
 model
 <ol>
 <li> try different modeling algorithms: Lasso Lars, OLS, Polynomial Regression and Tweedie Regressor (GLM)
