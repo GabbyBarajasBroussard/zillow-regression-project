@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 import sklearn.preprocessing
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, MinMaxScaler
-
+from sklearn.feature_selection import SelectKBest, f_regression
 
 # In[3]:
 
@@ -53,8 +53,8 @@ def clean_zillow():
 def prep_zillow_data():
     '''This function takes in the cleaned zillow data and returns a train, validate, and test data sets.'''
     df= clean_zillow()
-    train_validate, test = train_test_split(df, test_size=.3, random_state=123)
-    train, validate = train_test_split(train_validate, test_size=.3, random_state=123) 
+    train_validate, test = train_test_split(df, test_size=0.2, random_state=123)
+    train, validate = train_test_split(train_validate, test_size=0.3, random_state=123) 
     return train, validate, test
 
 def prep_split_zillow_data():
@@ -65,9 +65,9 @@ def prep_split_zillow_data():
     train_validate, test = train_test_split(df, test_size=.2, random_state=123)
     train, validate = train_test_split(train_validate, test_size=.3, random_state=123) 
     
-    X_train = train.drop(columns=['fips','lot_size','square_feet','bedroom_count','bathroom_count'])
-    X_validate = validate.drop(columns=['fips','lot_size', 'square_feet','bedroom_count','bathroom_count'])
-    X_test = test.drop(columns=['fips','lot_size','square_feet','bedroom_count','bathroom_count'])
+    X_train = train.drop(columns=['tax_value'])
+    X_validate = validate.drop(columns=['tax_value'])
+    X_test = test.drop(columns=['tax_value'])
 
     y_train = train[['tax_value']]
     y_validate = validate[['tax_value']]
@@ -76,7 +76,38 @@ def prep_split_zillow_data():
 
 
 # In[ ]:
+def select_kbest(x, y, k):
+    
+    # parameters: f_regression stats test, give me 8 features
+    f_selector = SelectKBest(f_regression, k=k)
+    
+    # find the top 8 X's correlated with y
+    f_selector.fit(x, y)
+    
+    # boolean mask of whether the column was selected or not. 
+    feature_mask = f_selector.get_support()
+    
+    f_feature = X_train_scaled.iloc[:,feature_mask].columns.tolist()
+    
+    return f_feature
 
+# In [ ]:
+def rfe(x, y, k):
+    
+    lm = LinearRegression()
+    
+    rfe = RFE(lm, k)
+    
+    # Transforming data using RFE
+    X_rfe = rfe.fit_transform(X_train_scaled,y_train)  
+    
+    mask = rfe.support_
+    
+    rfe_features = X_train_scaled.loc[:,mask].columns.tolist()
+    
+    print(str(len(rfe_features)), 'selected features')
+    
+    return  rfe_features
 
 
 
