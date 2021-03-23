@@ -1,8 +1,11 @@
 # Predicting Churn at Telco
 ## About the project
 ### Goals
-#### Predict the tax values of single unit properties that the tax district assessed using the property data from those whose last transaction was during the peak real estate demand months of May and August 2017. The deliverables for the project are acquire.py and prepare.py.
-
+#### Predict the tax values of single unit properties that the tax district assessed using the property data from those whose last transaction was during the peak real estate demand months of May and August 2017. 
+## Deliverables
+Final notebook: Should contain a walkthrough of documentation and cleaned up code
+README: Explain what the project is, how to reproduce the work, and project planning notes.
+Python modules: Should contain data acquisition and preparation files.
 
 ## Data Dictionary
 | Term                                           	| Data Type 	| Definition                                                                                                                                             	|
