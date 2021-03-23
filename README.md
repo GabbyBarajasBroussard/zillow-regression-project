@@ -1,4 +1,4 @@
-# Predicting Churn at Telco
+# Predicting Tax Value
 ## About the project
 ### Goals
 #### Predict the tax values of single unit properties that the tax district assessed using the property data from those whose last transaction was during the peak real estate demand months of May and August 2017. 
