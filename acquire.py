@@ -21,7 +21,7 @@ def get_zillow_data():
     else:
         # read the SQL query into a dataframe
         df = pd.read_sql('''
-SELECT parcelid, fips, latitude, longitude, bedroomcnt, bathroomcnt, calculatedfinishedsquarefeet, taxamount, taxvaluedollarcnt FROM properties_2017
+SELECT parcelid, fips, latitude, longitude, lotsizesquarefeet, calculatedfinishedsquarefeet, bedroomcnt, bathroomcnt, taxamount, taxvaluedollarcnt FROM properties_2017
 JOIN predictions_2017 USING (parcelid) 
 WHERE transactiondate BETWEEN '2017-05-01' AND '2017-08-31'
 AND (propertylandusetypeid IN (261, 262, 263, 264, 268, 273, 274, 276, 279))
